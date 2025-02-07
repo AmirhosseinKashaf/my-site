@@ -28,7 +28,7 @@
 				<div class="single-post row">
 					<div class="col-lg-12">
 						<div class="feature-img">
-							<img class="img-fluid" src="{% static 'img/blog/feature-img1.jpg' %}" alt="">
+							<img class="img-fluid" src="{{post.image.url}}" alt="">
 						</div>
 					</div>
 					<div class="col-lg-3  col-md-3 meta-details">
@@ -68,7 +68,7 @@
 							class="col-lg-6 col-md-6 col-12 nav-left flex-row d-flex justify-content-start align-items-center">
 							<div class="thumb">
 								{% if previous_post %}
-								<a href="{% url 'blog:single' pid=previous_post.id %}"><img class="ads-banner" src="{{post.image.url}}" width="150" height="100" alt=""></a>
+								<a href="{% url 'blog:single' pid=previous_post.id %}"><img class="ads-banner" src="{{previous_post.image.url}}" width="150" height="100" alt=""></a>
 							</div>
 							<div class="arrow">
 								<a href="{% url 'blog:single' pid=previous_post.id %}"><span class="lnr text-white lnr-arrow-left"></span></a>
@@ -78,11 +78,6 @@
 								<a href="{% url 'blog:single' pid=previous_post.id %}">
 									<h4>{{ previous_post.title }}</h4>
 								</a>
-								{% else %}
-								<div class="details">
-									<p>No Next Post</p>
-									<h4>No Next post available.</h4>
-								   </div>
 								{% endif %}
 							</div>
 						</div>
@@ -99,12 +94,7 @@
 								<a href="{% url 'blog:single' pid=next_post.id %}"><span class="lnr text-white lnr-arrow-right"></span></a>
 							</div>
 							<div class="thumb">
-								<a href="{% url 'blog:single' pid=next_post.id %}"><img class="img-fluid" src="{{post.image.url}}" width="150" height="100" alt=""></a>
-								{% else %}
-        							<div class="details">
-            							<p>No Next Post</p>
-            							<h4>No Next post available.</h4>
-       								</div>
+								<a href="{% url 'blog:single' pid=next_post.id %}"><img class="img-fluid" src="{{next_post.image.url}}" width="150" height="100" alt=""></a>
 								{% endif %}
 							</div>
 						</div>

@@ -10,7 +10,7 @@ def home_view (request):
 def single_view (request,pid):
     posts = Post.objects.filter(published_date__lte=timezone.now(),status=1)
     post = get_object_or_404(posts,pk=pid)
-    all_posts = Post.objects.all().order_by('published_date')
+    all_posts = Post.objects.filter(published_date__lte=timezone.now(),status=1).order_by('published_date')
     current_index = list(all_posts).index(post)
     previous_post = all_posts[current_index - 1] if current_index > 0 else None
     next_post = all_posts[current_index + 1] if current_index < len(all_posts) - 1 else None
