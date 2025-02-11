@@ -2,8 +2,12 @@ from django.shortcuts import render,get_object_or_404
 from blog.models import Post
 from django.utils import timezone
 # Create your views here.
-def home_view (request):
+def home_view (request,**kwargs):
     posts = Post.objects.filter(published_date__lte=timezone.now(),status=1)
+    if kwargs.get('author_username') != None:
+        posts = posts.filter(author__username=kwargs['author_username'])
+    if kwargs.get('acat_name') != None:
+        posts = posts.filter(category__name=kwargs['cat_name'])
     context = {'posts':posts}
     return render(request,'blog/blog-home.html',context)    
 
@@ -28,6 +32,14 @@ def blog_category (request,cat_name):
     posts = posts.filter(category__name=cat_name)
     context = {'posts':posts}
     return render(request,'blog/blog-home.html',context) 
+
+def blog_search(request):
+    posts = Post.objects.filter(published_date__lte=timezone.now(),status=1)
+    if request.method == 'GET':
+        if s := request.GET.get('s'):
+            posts = posts.filter(content__contains=s)
+    context = {'posts':posts}
+    return render(request,'blog/blog-home.html',context)
 
 # def test (request):
 #     Posts = Post.objects.all()
