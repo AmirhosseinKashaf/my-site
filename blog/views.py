@@ -7,7 +7,7 @@ def home_view (request,**kwargs):
     posts = Post.objects.filter(published_date__lte=timezone.now(),status=1)
     if kwargs.get('author_username') != None:
         posts = posts.filter(author__username=kwargs['author_username'])
-    if kwargs.get('acat_name') != None:
+    if kwargs.get('cat_name') != None:
         posts = posts.filter(category__name=kwargs['cat_name'])
     posts = Paginator(posts,2)
     try:
