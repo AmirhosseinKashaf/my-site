@@ -1,6 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from blog.models import Post
 from django.utils import timezone
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 # Create your views here.
 def home_view (request,**kwargs):
     posts = Post.objects.filter(published_date__lte=timezone.now(),status=1)
@@ -8,6 +9,14 @@ def home_view (request,**kwargs):
         posts = posts.filter(author__username=kwargs['author_username'])
     if kwargs.get('acat_name') != None:
         posts = posts.filter(category__name=kwargs['cat_name'])
+    posts = Paginator(posts,2)
+    try:
+        page_number = request.GET.get('page')
+        posts = posts.get_page(page_number)
+    except PageNotAnInteger:
+        posts = posts.get_page(1)
+    except EmptyPage:
+        posts = posts.get_page(1)
     context = {'posts':posts}
     return render(request,'blog/blog-home.html',context)    
 
