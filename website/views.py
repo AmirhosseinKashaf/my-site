@@ -30,6 +30,9 @@ def newsletter_view(request):
             form.save()
             messages.add_message(request,messages.SUCCESS,'your ticket submitted succesfully.')
             return HttpResponseRedirect('/')
-    else:
-        messages.add_message(request,messages.ERROR,"your ticket didn't submit")
-        return HttpResponseRedirect('/')
+        else:
+             messages.add_message(request,messages.ERROR,"your ticket didn't submit")
+             return HttpResponseRedirect('/')
+    form = Newsletterform()
+    return render(request,'website/index.html',{'form':form}) 
+        
