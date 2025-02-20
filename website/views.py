@@ -15,8 +15,9 @@ def contact_view (request):
         form = ContactForm(request.POST)
         if form.is_valid():
             form = form.save(commit=False)
+            form.name = "Unknown"  
             form.save()
-            messages.add_message(request,messages.SUCCESS,'your ticket submited succesfully.')
+            messages.add_message(request,messages.SUCCESS,'your ticket submitted succesfully.')
         else:
             messages.add_message(request,messages.ERROR,"your ticket didn't submit")
     form = ContactForm() 
@@ -27,6 +28,8 @@ def newsletter_view(request):
         form = Newsletterform(request.POST)
         if form.is_valid():
             form.save()
+            messages.add_message(request,messages.SUCCESS,'your ticket submitted succesfully.')
             return HttpResponseRedirect('/')
     else:
+        messages.add_message(request,messages.ERROR,"your ticket didn't submit")
         return HttpResponseRedirect('/')
