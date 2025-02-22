@@ -1,5 +1,5 @@
 from django import template
-from blog.models import Post,Category
+from blog.models import Post,Category,Comment
 from django.utils import timezone
 
 
@@ -9,6 +9,10 @@ register = template.Library()
 def latestposts(args=3):
    posts = Post.objects.filter(published_date__lte=timezone.now(),status=1)[:args]
    return {'posts':posts}
+
+@register.simple_tag(name='comments_count')
+def function(pid):   
+   return Comment.objects.filter(post=pid,approved=True).count()
 
 @register.inclusion_tag('blog/blog-post-categories.html')
 def postcategories():
