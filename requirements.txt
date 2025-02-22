@@ -3,3 +3,5 @@ Django==4.2.17
 sqlparse
 tzdata
 pillow
+django-debug-toolbar
+django-robots
