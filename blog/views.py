@@ -2,6 +2,8 @@ from django.shortcuts import render,get_object_or_404
 from blog.models import Post,Comment
 from django.utils import timezone
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
+from blog.forms import CommentForm
+from django.contrib import messages
 # Create your views here.
 def home_view (request,**kwargs):
     posts = Post.objects.filter(published_date__lte=timezone.now(),status=1)
@@ -23,6 +25,14 @@ def home_view (request,**kwargs):
     return render(request,'blog/blog-home.html',context)    
 
 def single_view (request,pid):
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request,messages.SUCCESS,'your comment submitted succesfully.')
+        else:
+            messages.add_message(request,messages.ERROR,'your comment didn\'t submit.')
+    form = CommentForm()
     posts = Post.objects.filter(published_date__lte=timezone.now(),status=1)
     post = get_object_or_404(posts,pk=pid)
     comments = Comment.objects.filter(post=post.id,approved=True)
@@ -37,6 +47,7 @@ def single_view (request,pid):
         'previous_post' :previous_post,
         'next_post' :next_post,
         'comments' : comments,
+        'form' : form
         }
     return render(request,'blog/blog-single.html',context) 
 
