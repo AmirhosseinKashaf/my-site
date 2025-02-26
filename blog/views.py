@@ -4,6 +4,8 @@ from django.utils import timezone
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from blog.forms import CommentForm
 from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 # Create your views here.
 def home_view (request,**kwargs):
     posts = Post.objects.filter(published_date__lte=timezone.now(),status=1)
@@ -35,21 +37,24 @@ def single_view (request,pid):
     form = CommentForm()
     posts = Post.objects.filter(published_date__lte=timezone.now(),status=1)
     post = get_object_or_404(posts,pk=pid)
-    comments = Comment.objects.filter(post=post.id,approved=True)
-    all_posts = Post.objects.filter(published_date__lte=timezone.now(),status=1).order_by('published_date')
-    current_index = list(all_posts).index(post)
-    previous_post = all_posts[current_index - 1] if current_index > 0 else None
-    next_post = all_posts[current_index + 1] if current_index < len(all_posts) - 1 else None
-    post.counted_views += 1  
-    post.save()
-    context = {
-        'post' :post,
-        'previous_post' :previous_post,
-        'next_post' :next_post,
-        'comments' : comments,
-        'form' : form
-        }
-    return render(request,'blog/blog-single.html',context) 
+    if not post.login_require:
+        comments = Comment.objects.filter(post=post.id,approved=True)
+        all_posts = Post.objects.filter(published_date__lte=timezone.now(),status=1).order_by('published_date')
+        current_index = list(all_posts).index(post)
+        previous_post = all_posts[current_index - 1] if current_index > 0 else None
+        next_post = all_posts[current_index + 1] if current_index < len(all_posts) - 1 else None
+        post.counted_views += 1  
+        post.save()
+        context = {
+            'post' :post,
+            'previous_post' :previous_post,
+            'next_post' :next_post,
+            'comments' : comments,
+            'form' : form
+            }
+        return render(request,'blog/blog-single.html',context) 
+    else:
+        return HttpResponseRedirect(reverse('accounts:login'))
 
 def blog_category (request,cat_name):
     posts = Post.objects.filter(published_date__lte=timezone.now(),status=1)
