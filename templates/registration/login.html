@@ -14,7 +14,7 @@
   </head>
 
   <body class="text-center">
-    <form class="form-signin" method="post" action="{% url 'accounts:login' %}">
+    <form class="form-signin" method="post" action="{% url 'login' %}">
       {% csrf_token %}
       <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">Please log in</h1>
@@ -51,7 +51,7 @@
         </div>
       {% endif %}
 
-      <p><a href="{% url 'accounts:password_reset' %}">Forgot Password?</a></p>
+      <p><a href="{% url 'password_reset' %}">Forgot Password?</a></p>
       <div class="checkbox mb-3">
         <label>
           <input type="checkbox" value="remember-me"> Remember me
