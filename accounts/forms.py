@@ -3,9 +3,7 @@ from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import SetPasswordForm
-
-
-
+from django.contrib.auth import get_user_model
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)  # Add the email field
@@ -21,6 +19,7 @@ class UsernameOrEmailAuthenticationForm(AuthenticationForm):
         username_or_email = self.cleaned_data.get('username')
 
         # Check if the input is an email
+        User = get_user_model()
         if '@' in username_or_email:
             try:
                 user = User.objects.get(email=username_or_email)
@@ -29,7 +28,11 @@ class UsernameOrEmailAuthenticationForm(AuthenticationForm):
                 raise ValidationError("This email is not registered.")
         
         # If it's not an email, assume it's a username
-        return username_or_email
+        try:
+            user = User.objects.get(username=username_or_email)
+            return username_or_email
+        except User.DoesNotExist:
+            raise ValidationError("This username does not exist.")
     
 class ForgotPasswordForm(forms.Form):
     username_or_email = forms.CharField(label="Username or Email")
