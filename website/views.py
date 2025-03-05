@@ -36,3 +36,6 @@ def newsletter_view(request):
     form = Newsletterform()
     return render(request,'website/index.html',{'form':form}) 
         
+
+def coming_soon(request, path=None):
+    return render(request,'coming_soon.html')  
