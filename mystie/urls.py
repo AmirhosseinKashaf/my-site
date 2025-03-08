@@ -30,9 +30,9 @@ sitemaps = {
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', coming_soon, name='coming_soon'),
-    # If you want to catch all paths and redirect them to this page, use the following pattern
-    path('<path:path>', coming_soon),
+    # path('', coming_soon, name='coming_soon'),
+    # # If you want to catch all paths and redirect them to this page, use the following pattern
+    # path('<path:path>', coming_soon),
     path('', include('website.urls')),
     path('blog/', include('blog.urls')),
     path('accounts/',include('accounts.urls')),
